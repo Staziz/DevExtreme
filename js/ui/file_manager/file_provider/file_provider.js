@@ -155,9 +155,10 @@ class FileManagerItem {
     constructor(pathInfo, name, isDirectory) {
         this.name = name;
 
-        this.pathInfo = pathInfo && [...pathInfo] || [];
+        this.pathInfo = Array.isArray(pathInfo) && pathInfo || pathInfo && [...pathInfo] || [];
+        // console.log(`name = ${this.name}, pathInfo = ${this.pathInfo}`);
         this.parentPath = this._getPathByPathInfo(this.pathInfo);
-        this.key = this.relativeName = pathCombine(this.parentPath, name);
+        this.key = this.relativeName = pathCombine(this.parentPath, name).join(PATH_SEPARATOR);
 
         this.isDirectory = isDirectory || false;
         this.isRoot = false;
@@ -170,7 +171,10 @@ class FileManagerItem {
     }
 
     getFullPathInfo() {
-        const pathInfo = [...this.pathInfo];
+        // debugger
+        const pathInfo = [];
+        // console.log(`getFullPathInfo() in file_provider; pathInfo = `);
+        // console.log(pathInfo);
         !this.isRoot && pathInfo.push({
             key: this.key,
             name: this.name

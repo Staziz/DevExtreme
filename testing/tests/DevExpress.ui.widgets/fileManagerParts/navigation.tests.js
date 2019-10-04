@@ -283,4 +283,47 @@ QUnit.module("Navigation operations", moduleConfig, () => {
         assert.strictEqual(this.wrapper.getThumbnailsItemName(3), "File 3.xml", "item name has allowed extension");
     });
 
+    test("special symbols in filenames must be processed correctly", function(assert) {
+        const inst = this.wrapper.getInstance();
+        const incorrectName = "Docu/me/nts";
+        const newItem = {
+            name: incorrectName,
+            isDirectory: true,
+            items: [
+                {
+                    name: "About",
+                    isDirectory: true,
+                    items: []
+                },
+                {
+                    name: "File.txt",
+                    isDirectory: false,
+                    size: 3072
+                }
+            ],
+        };
+        const fileSystem = inst.option()["fileProvider"];
+        fileSystem.push(newItem);
+        inst.option("fileProvider", fileSystem);
+        this.clock.tick(800);
+
+        inst.option("currentPath", incorrectName);
+        this.clock.tick(800);
+
+        assert.equal(this.wrapper.getFocusedItemText(), incorrectName, "target folder selected");
+        assert.equal(this.wrapper.getBreadcrumbsPath(), "Files/" + incorrectName, "breadcrumbs refrers to the target folder");
+
+        inst.option("currentPath", incorrectName + "/About");
+        this.clock.tick(800);
+
+        assert.equal(this.wrapper.getFocusedItemText(), "About", "target folder selected");
+        assert.equal(this.wrapper.getBreadcrumbsPath(), "Files/" + incorrectName + "/About", "breadcrumbs refrers to the target folder");
+
+        this.wrapper.getBreadcrumbsItemByText("Files").trigger("dxclick");
+        this.clock.tick(400);
+
+        assert.equal(this.wrapper.getFocusedItemText(), "Files", "root folder selected");
+        assert.equal(this.wrapper.getBreadcrumbsPath(), "Files", "breadcrumbs refrers to the root folder");
+    });
+
 });

@@ -73,6 +73,8 @@ class ArrayFileProvider extends FileProvider {
     }
 
     createFolder(parentDir, name) {
+        // debugger
+        // if(!this._isFileItemExists(parentDir) || !this._isDirGetter(parentDir.dataItem)) {
         if(!this._isFileItemExists(parentDir) || this._isDirGetter(parentDir.fileItem)) {
             throw {
                 errorId: ErrorCode.DirectoryNotFound,
@@ -119,7 +121,7 @@ class ArrayFileProvider extends FileProvider {
     }
 
     _checkAbilityToMoveOrCopyItem(item, destinationDir) {
-        const newItemPath = pathCombine(destinationDir.relativeName, item.name);
+        const newItemPath = pathCombine(destinationDir.relativeName, item.name).join("/");
         if(newItemPath.indexOf(item.relativeName) === 0) {
             throw {
                 errorId: ErrorCode.Other,
@@ -209,7 +211,7 @@ class ArrayFileProvider extends FileProvider {
     _getKeyFromDataObject(dataObj, defaultKeyPrefix) {
         let key = this._keyGetter(dataObj);
         if(!key) {
-            key = pathCombine(defaultKeyPrefix, this._nameGetter(dataObj));
+            key = pathCombine(defaultKeyPrefix, this._nameGetter(dataObj)).join("/");
         }
         return key;
     }

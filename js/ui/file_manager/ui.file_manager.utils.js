@@ -1,4 +1,5 @@
 import { each } from "../../core/utils/iterator";
+import { isString } from "../../core/utils/type";
 
 const PATH_SEPARATOR = "/";
 
@@ -8,18 +9,20 @@ const getFileExtension = path => {
 };
 
 const getName = path => {
-    const index = path.lastIndexOf(PATH_SEPARATOR);
-    return index !== -1 ? path.substr(index + PATH_SEPARATOR.length) : path;
+    if(isString(path)) {
+        return path;
+    }
+    const result = path || [];
+    return result[result.length - 1];
 };
 
 const getParentPath = path => {
-    const index = path.lastIndexOf(PATH_SEPARATOR);
-    return index !== -1 ? path.substr(0, index) : "";
+    const result = path || [];
+    return result.length !== 1 ? result.slice(0, result.length - 1).join(PATH_SEPARATOR) : "";
 };
 
 const getPathParts = (path, includeFullPath) => {
-    const result = (path || "")
-        .split(PATH_SEPARATOR)
+    const result = (path || [])
         .map(p => p.trim())
         .filter(p => p);
 
@@ -33,15 +36,11 @@ const getPathParts = (path, includeFullPath) => {
 };
 
 const pathCombine = function() {
-    let result = "";
+    let result = [];
 
     each(arguments, (_, arg) => {
         if(arg) {
-            if(result) {
-                result += PATH_SEPARATOR;
-            }
-
-            result += arg;
+            result.push(arg);
         }
     });
 

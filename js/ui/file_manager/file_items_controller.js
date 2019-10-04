@@ -67,6 +67,7 @@ export default class FileItemsController {
     }
 
     setCurrentPath(path) {
+        // console.log(`setCurrentPath(${path}) in fileItemsController`);
         const pathParts = getPathParts(path);
         return this._getDirectoryByPathParts(this._rootDirectoryInfo, pathParts)
             .then(directoryInfo => {
@@ -81,13 +82,14 @@ export default class FileItemsController {
         let currentPath = "";
         let directory = this.getCurrentDirectory();
         while(directory && !directory.fileItem.isRoot) {
-            currentPath = pathCombine(directory.fileItem.name, currentPath);
+            currentPath = pathCombine(directory.fileItem.name, currentPath); // instead of this make Array.prototype.push()
             directory = directory.parentDirectory;
         }
         return currentPath;
     }
 
     getCurrentDirectory() {
+        // debugger
         return this._currentDirectoryInfo;
     }
 

@@ -646,7 +646,8 @@ class FileManager extends Widget {
     }
 
     _onSelectedDirectoryChanged() {
-        const directoryInfo = this._controller.getCurrentDirectory();
+        // debugger
+        const directoryInfo = this._getCurrentDirectory();
         const directoryItem = directoryInfo && directoryInfo.fileItem || null;
         const currentPath = this._controller.getCurrentPath();
 
@@ -677,6 +678,7 @@ class FileManager extends Widget {
     }
 
     _onSelectedItemOpened({ fileItemInfo }) {
+        // debugger
         const fileItem = fileItemInfo.fileItem;
         if(!fileItem.isDirectory) {
             this._onSelectedFileOpenedAction({ fileItem });
